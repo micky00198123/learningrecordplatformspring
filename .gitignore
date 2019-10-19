@@ -31,3 +31,4 @@ build/
 /mvnw
 /mvnw.cmd
 /.mvn/
+/properties/jdbc.properties
