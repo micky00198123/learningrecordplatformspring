@@ -1,6 +1,6 @@
 package com.fina.lrps.service;
 
-import com.fina.lrps.model.Notice;
+import com.fina.lrps.domain.Notice;
 
 import java.util.Map;
 

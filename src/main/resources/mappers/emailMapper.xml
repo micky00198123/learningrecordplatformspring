@@ -3,15 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- namespace：命名空间，保证命名空间唯一 -->
-<!-- 这里namespace采用接口式编程 -->
-<mapper namespace="com.fina.lrps.repository.EmailMapper">
+<mapper namespace="com.fina.lrps.dao.EmailMapper">
 
-    <!-- id：同一个命名空间下保持唯一 -->
     <select id="getMainDepartment" resultType="string">
         SELECT `department_id` FROM `user_department`
         WHERE `student_id` = #{studentId} AND `if_main` = '是'
    </select>
+
 
 
 </mapper>

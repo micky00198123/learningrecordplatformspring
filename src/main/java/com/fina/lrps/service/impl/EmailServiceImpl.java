@@ -1,6 +1,7 @@
 package com.fina.lrps.service.impl;
 
-import com.fina.lrps.model.Notice;
+import com.fina.lrps.domain.Notice;
+import com.fina.lrps.dao.EmailMapper;
 import com.fina.lrps.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,20 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Service
-@PropertySource("classpath:properties/email.properties")
+@PropertySource("classpath:application.properties")
 public class EmailServiceImpl implements EmailService {
 
-    @Value("${officialMailbox}")
+    @Value("${spring.mail.username}")
     private String officialMailbox;
 
-    // JavaMailSender动态代理所用配置在application.yml下
     private JavaMailSender mailSender;
+    private EmailMapper emailMapper;
 
     @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender) {
+    public EmailServiceImpl(JavaMailSender mailSender, EmailMapper emailMapper) {
         this.mailSender = mailSender;
+        this.emailMapper = emailMapper;
     }
 
     @Override
@@ -42,16 +43,16 @@ public class EmailServiceImpl implements EmailService {
         String[] emailFailures;
 
         platformFailures = sendEmailOnPlatform(notice);
-        emailFailures = sendEmailOnMailbox(notice);
+        //emailFailures = sendEmailOnMailbox(notice);
 
         if(platformFailures == null || platformFailures.length > 0) {
             error = true;
             errorMessage.add("system");
         }
-        if(emailFailures == null || emailFailures.length > 0) {
-            error = true;
-            errorMessage.add("mailbox");
-        }
+//        if(emailFailures == null || emailFailures.length > 0) {
+//            error = true;
+//            errorMessage.add("mailbox");
+//        }
 
         if(error) {
             result.put("status", "0");
@@ -69,7 +70,9 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String[] sendEmailOnPlatform(Notice notice) {
 
-        //return null;
+        String mainDepartment = emailMapper.getMainDepartment("111");
+
+        System.out.println(mainDepartment);
 
         return new String[0];
     }

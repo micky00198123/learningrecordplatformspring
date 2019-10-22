@@ -1,4 +1,4 @@
-package com.fina.lrps.model;
+package com.fina.lrps.domain;
 
 import lombok.Getter;
 import lombok.Setter;

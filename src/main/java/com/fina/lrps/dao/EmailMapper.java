@@ -1,7 +1,11 @@
-package com.fina.lrps.repository;
+package com.fina.lrps.dao;
 
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Repository;
 
+// mybatis代理的接口要加@Repository
+// 否则spring扫描代码@Autowired报红,但依然能注入成功
+@Repository
 public interface EmailMapper {
 
     /**

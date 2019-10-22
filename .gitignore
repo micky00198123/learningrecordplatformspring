@@ -1,7 +1,6 @@
 HELP.md
 target/
-!**/src/main/**
-**/src/test/**
+.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
@@ -31,4 +30,5 @@ build/
 /mvnw
 /mvnw.cmd
 /.mvn/
-/properties/jdbc.properties
+**/src/test/**
+/src/main/resources/application.yml
