@@ -1,7 +1,7 @@
 package com.fina.lrps.dao;
 
-import com.fina.lrps.service.User;
-import com.fina.lrps.service.DepartmentUser;
+import com.fina.lrps.domain.User;
+import com.fina.lrps.domain.DepartmentUser;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
