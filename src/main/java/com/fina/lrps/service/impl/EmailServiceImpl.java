@@ -84,15 +84,18 @@ public class EmailServiceImpl implements EmailService {
         return notice;
     }
 
-
-    private boolean sendEmailOnPlatform(Notice notice) {
+    private NoticePo noticeToNoticePo(Notice notice) {
         NoticePo noticePo = new NoticePo();
         BeanUtils.copyProperties(notice, noticePo);
         String noticeId = String.valueOf(new Date().getTime());
         noticePo.setNoticeId(noticeId);
+        return noticePo;
+    }
 
+    private boolean sendEmailOnPlatform(Notice notice) {
+        NoticePo noticePo = noticeToNoticePo(notice);
         NoticeUsers noticeUsers = new NoticeUsers();
-        noticeUsers.setNoticeId(noticeId);
+        noticeUsers.setNoticeId(noticePo.getNoticeId());
         noticeUsers.setAddressesId(notice.getAddressesId());
 
         try {

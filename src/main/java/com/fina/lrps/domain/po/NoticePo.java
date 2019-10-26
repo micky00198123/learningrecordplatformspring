@@ -21,6 +21,7 @@ public class NoticePo {
     private Date sendingTime;
     // 标签
     private String label;
-
+    // 删除
+    private String if_delete;
 
 }
