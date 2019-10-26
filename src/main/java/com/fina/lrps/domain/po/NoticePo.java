@@ -22,6 +22,6 @@ public class NoticePo {
     // 标签
     private String label;
     // 删除
-    private String if_delete;
+    private String ifDelete;
 
 }

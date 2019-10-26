@@ -89,6 +89,7 @@ public class EmailServiceImpl implements EmailService {
         BeanUtils.copyProperties(notice, noticePo);
         String noticeId = String.valueOf(new Date().getTime());
         noticePo.setNoticeId(noticeId);
+        noticePo.setIfDelete("否");
         return noticePo;
     }
 
