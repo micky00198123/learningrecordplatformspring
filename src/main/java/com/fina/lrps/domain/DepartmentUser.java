@@ -3,7 +3,7 @@ package com.fina.lrps.domain;
 import java.io.Serializable;
 
 public class DepartmentUser implements Serializable {
-    private User user;
+    private String studentId;
     private String departmentId;
     private String ifDelete;
     private String ifMain;
@@ -16,19 +16,19 @@ public class DepartmentUser implements Serializable {
     @Override
     public String toString() {
         return "DepartmentUser{" +
-                "user=" + user +
+                "studentId='" + studentId + '\'' +
                 ", departmentId='" + departmentId + '\'' +
                 ", ifDelete='" + ifDelete + '\'' +
                 ", ifMain='" + ifMain + '\'' +
                 '}';
     }
 
-    public User getUser() {
-        return user;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 
     public String getDepartmentId() {
