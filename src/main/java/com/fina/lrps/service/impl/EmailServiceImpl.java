@@ -2,7 +2,11 @@ package com.fina.lrps.service.impl;
 
 import com.fina.lrps.domain.Notice;
 import com.fina.lrps.dao.EmailMapper;
+import com.fina.lrps.domain.po.NoticePo;
+import com.fina.lrps.domain.NoticeUsers;
+import com.fina.lrps.domain.vo.NoticeVo;
 import com.fina.lrps.service.EmailService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -11,10 +15,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -33,14 +35,19 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Map<String, Object> sendEmail(Notice notice) {
-        Assert.notNull(notice, "Notice param must not be null");
+    public Map<String, Object> sendEmail(NoticeVo noticeVo) {
+        Assert.notNull(noticeVo, "Notice param must not be null");
 
         Map<String, Object> result = new HashMap<>();
         List<String> errorMessage = new ArrayList<>();
         boolean error = false;
         String[] platformFailures;
         String[] emailFailures;
+
+        Notice notice = new Notice();
+        BeanUtils.copyProperties(noticeVo, notice);
+        notice.setSendingTime(new Date());
+        setLabel(notice);
 
         platformFailures = sendEmailOnPlatform(notice);
         //emailFailures = sendEmailOnMailbox(notice);
@@ -67,18 +74,44 @@ public class EmailServiceImpl implements EmailService {
         return result;
     }
 
-    @Override
-    public String[] sendEmailOnPlatform(Notice notice) {
+    private void setLabel(Notice notice) {
+        notice.setPosition(emailMapper.getPosition(notice.getUserId()));
+        String label;
+        int length = notice.getAddressesId().length;
+        if(length == emailMapper.countLearningMember()-1) {
+            label = "全体";
+        } else if(length < 10) {
+            label = "私信";
+        } else {
+            label = emailMapper.getMainDepartment(notice.getUserId());
+        }
+        notice.setLabel(label);
+    }
 
-        String mainDepartment = emailMapper.getMainDepartment("111");
 
-        System.out.println(mainDepartment);
+    private String[] sendEmailOnPlatform(Notice notice) {
+
+        NoticePo noticePo = new NoticePo();
+        BeanUtils.copyProperties(notice, noticePo);
+        String noticeId = String.valueOf(new Date().getTime());
+        noticePo.setNoticeId(noticeId);
+
+        NoticeUsers noticeUsers = new NoticeUsers();
+        noticeUsers.setNoticeId(noticeId);
+        noticeUsers.setAddressesId(notice.getAddressesId());
+
+        try {
+            emailMapper.insertNotice(noticePo);
+            emailMapper.insertNoticeAndUser(noticeUsers);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
         return new String[0];
     }
 
-    @Override
-    public String[] sendEmailOnMailbox(Notice notice) {
+    private String[] sendEmailOnMailbox(Notice notice) {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(officialMailbox);
