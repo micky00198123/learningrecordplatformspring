@@ -17,7 +17,6 @@ import org.springframework.util.Assert;
 
 import java.util.*;
 
-
 @Service
 @PropertySource("classpath:application.properties")
 public class EmailServiceImpl implements EmailService {
@@ -38,35 +37,26 @@ public class EmailServiceImpl implements EmailService {
     public Map<String, Object> sendEmail(NoticeVo noticeVo) {
         Assert.notNull(noticeVo, "Notice param must not be null");
 
+        // 结果集
         Map<String, Object> result = new HashMap<>();
+        // 错误信息
         List<String> errorMessage = new ArrayList<>();
         boolean error = false;
-        String[] platformFailures;
-        String[] emailFailures;
 
-        Notice notice = new Notice();
-        BeanUtils.copyProperties(noticeVo, notice);
-        notice.setSendingTime(new Date());
-        setLabel(notice);
+        Notice notice = noticeVoToNotice(noticeVo);
 
-        platformFailures = sendEmailOnPlatform(notice);
-        //emailFailures = sendEmailOnMailbox(notice);
-
-        if(platformFailures == null || platformFailures.length > 0) {
+        if(!sendEmailOnPlatform(notice)) {
             error = true;
             errorMessage.add("system");
         }
-//        if(emailFailures == null || emailFailures.length > 0) {
-//            error = true;
-//            errorMessage.add("mailbox");
-//        }
+        if(!sendEmailOnMailbox(notice)) {
+            error = true;
+            errorMessage.add("mailbox");
+        }
 
         if(error) {
             result.put("status", "0");
             result.put("errorMessage", errorMessage.toArray(new String[0]));
-            // failureId实际上只有内部系统的failures
-            result.put("failureId",
-                    platformFailures == null ? new String[0] : platformFailures);
         } else {
             result.put("status", "1");
         }
@@ -74,7 +64,11 @@ public class EmailServiceImpl implements EmailService {
         return result;
     }
 
-    private void setLabel(Notice notice) {
+    private Notice noticeVoToNotice(NoticeVo noticeVo) {
+        Notice notice = new Notice();
+        BeanUtils.copyProperties(noticeVo, notice);
+        notice.setSendingTime(new Date());
+
         notice.setPosition(emailMapper.getPosition(notice.getUserId()));
         String label;
         int length = notice.getAddressesId().length;
@@ -86,11 +80,12 @@ public class EmailServiceImpl implements EmailService {
             label = emailMapper.getMainDepartment(notice.getUserId());
         }
         notice.setLabel(label);
+
+        return notice;
     }
 
 
-    private String[] sendEmailOnPlatform(Notice notice) {
-
+    private boolean sendEmailOnPlatform(Notice notice) {
         NoticePo noticePo = new NoticePo();
         BeanUtils.copyProperties(notice, noticePo);
         String noticeId = String.valueOf(new Date().getTime());
@@ -105,13 +100,13 @@ public class EmailServiceImpl implements EmailService {
             emailMapper.insertNoticeAndUser(noticeUsers);
         } catch(Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
 
-        return new String[0];
+        return true;
     }
 
-    private String[] sendEmailOnMailbox(Notice notice) {
+    private boolean sendEmailOnMailbox(Notice notice) {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(officialMailbox);
@@ -123,11 +118,10 @@ public class EmailServiceImpl implements EmailService {
             mailSender.send(message);
         } catch(Exception e) {
             e.printStackTrace();
-            // 失败返回空
-            return null;
+            return false;
         }
         // 成功返回空串
-        return new String[0];
+        return false;
 
     }
 

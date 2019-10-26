@@ -1,8 +1,6 @@
 package com.fina.lrps.domain.po;
 
-import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
