@@ -35,7 +35,7 @@
             label
         ) VALUES (
             #{noticeId},
-            #{userId},
+            #{studentId},
             #{sendingTime},
             #{content},
             #{label}
@@ -47,14 +47,24 @@
         notice_id,
         student_id
         ) VALUES
-        <foreach collection="addressesId" item="id" separator=",">
+        <foreach collection="addressesId" item="addressesId" separator=",">
         (
         #{noticeId},
-        #{id}
+        #{addressesId}
         )
         </foreach>
-
     </insert>
 
+    <select id="findMember" resultType="int">
+        SELECT COUNT(1) FROM `user` WHERE `student_id` = #{studentId}
+    </select>
+
+    <select id="findMembers" resultType="int">
+        SELECT COUNT(1) FROM `user` WHERE `state` = '学习' AND `student_id` IN
+        <foreach collection="array" item="addressesId"
+                 open="(" close=")" separator=",">
+            #{addressesId}
+        </foreach>
+    </select>
 
 </mapper>

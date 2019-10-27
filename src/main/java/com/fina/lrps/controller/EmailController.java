@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+
 @Controller
 public class EmailController {
 
@@ -21,7 +23,7 @@ public class EmailController {
 
     @PostMapping(value = "/email/sendEmail")
     @ResponseBody
-    public String sendNotice(@RequestBody NoticeVo noticeVo) {
+    public String sendNotice(@RequestBody @Valid NoticeVo noticeVo) {
         return JSON.toJSONString(emailService.sendEmail(noticeVo));
     }
 

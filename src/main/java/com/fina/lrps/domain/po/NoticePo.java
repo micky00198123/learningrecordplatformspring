@@ -14,7 +14,7 @@ public class NoticePo {
     // 通知编号
     private String noticeId;
     // 发件人学号
-    private String userId;
+    private String studentId;
     // 正文
     private String content;
     // 发送时间

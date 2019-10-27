@@ -12,7 +12,7 @@ import java.util.Date;
 public class Notice {
 
     // 发件人学号
-    private String userId;
+    private String studentId;
     // 收件人学号
     private String[] addressesId;
     // 正文

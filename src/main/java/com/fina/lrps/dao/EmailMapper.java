@@ -44,4 +44,18 @@ public interface EmailMapper {
      */
     int insertNoticeAndUser(NoticeUsers noticeUsers);
 
+    /**
+     * 单人查找
+     * @param studentId studentId
+     * @return int
+     */
+    int findMember(String studentId);
+
+    /**
+     * 多人查找
+     * @param studentId studentId
+     * @return int
+     */
+    int findMembers(String[] studentId);
+
 }

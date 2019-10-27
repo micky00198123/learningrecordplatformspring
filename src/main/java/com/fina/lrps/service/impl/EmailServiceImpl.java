@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Map<String, Object> sendEmail(NoticeVo noticeVo) {
-        Assert.notNull(noticeVo, "Notice param must not be null");
+        Assert.notNull(noticeVo, "NoticeVo param must not be null");
 
         // 结果集
         Map<String, Object> result = new HashMap<>();
@@ -44,6 +44,12 @@ public class EmailServiceImpl implements EmailService {
         boolean error = false;
 
         Notice notice = noticeVoToNotice(noticeVo);
+
+        if(emailMapper.findMember(notice.getStudentId()) != 1) {
+            result.put("status", "0");
+            result.put("errorMessage", "bad sender");
+            return result;
+        }
 
         if(!sendEmailOnPlatform(notice)) {
             error = true;
@@ -69,7 +75,7 @@ public class EmailServiceImpl implements EmailService {
         BeanUtils.copyProperties(noticeVo, notice);
         notice.setSendingTime(new Date());
 
-        notice.setPosition(emailMapper.getPosition(notice.getUserId()));
+        notice.setPosition(emailMapper.getPosition(notice.getStudentId()));
         String label;
         int length = notice.getAddressesId().length;
         if(length == emailMapper.countLearningMember()-1) {
@@ -77,7 +83,7 @@ public class EmailServiceImpl implements EmailService {
         } else if(length < 10) {
             label = "私信";
         } else {
-            label = emailMapper.getMainDepartment(notice.getUserId());
+            label = emailMapper.getMainDepartment(notice.getStudentId());
         }
         notice.setLabel(label);
 
@@ -87,17 +93,24 @@ public class EmailServiceImpl implements EmailService {
     private NoticePo noticeToNoticePo(Notice notice) {
         NoticePo noticePo = new NoticePo();
         BeanUtils.copyProperties(notice, noticePo);
-        String noticeId = String.valueOf(new Date().getTime());
+        String noticeId = String.valueOf(new Date().getTime())
+                + new Random().nextInt(99);
         noticePo.setNoticeId(noticeId);
         noticePo.setIfDelete("否");
         return noticePo;
     }
 
+    // 内部发邮件
     private boolean sendEmailOnPlatform(Notice notice) {
         NoticePo noticePo = noticeToNoticePo(notice);
         NoticeUsers noticeUsers = new NoticeUsers();
         noticeUsers.setNoticeId(noticePo.getNoticeId());
         noticeUsers.setAddressesId(notice.getAddressesId());
+
+        if(emailMapper.findMembers(noticeUsers.getAddressesId())
+                != noticeUsers.getAddressesId().length) {
+            return false;
+        }
 
         try {
             emailMapper.insertNotice(noticePo);
@@ -110,12 +123,13 @@ public class EmailServiceImpl implements EmailService {
         return true;
     }
 
+    // 外部发邮件
     private boolean sendEmailOnMailbox(Notice notice) {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(officialMailbox);
         message.setTo(notice.getAddressesId());
-        message.setSubject(notice.getUserId() + "的一封邮件");
+        message.setSubject(notice.getStudentId() + "的一封邮件");
         message.setText(notice.getContent());
 
         try {
