@@ -1,5 +1,6 @@
 package com.fina.lrps.service.impl;
 
+import com.fina.lrps.config.YamlConfigFactory;
 import com.fina.lrps.domain.Notice;
 import com.fina.lrps.dao.EmailMapper;
 import com.fina.lrps.domain.po.NoticePo;
@@ -9,29 +10,34 @@ import com.fina.lrps.service.EmailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Service
-@PropertySource("classpath:application.properties")
+@PropertySource(value = "application.yml",
+factory = YamlConfigFactory.class)
 public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String officialMailbox;
-
+    @Autowired
     private JavaMailSender mailSender;
+    @Autowired
     private EmailMapper emailMapper;
 
-    @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender, EmailMapper emailMapper) {
-        this.mailSender = mailSender;
-        this.emailMapper = emailMapper;
-    }
+//    @Autowired
+//    public EmailServiceImpl(JavaMailSender mailSender, EmailMapper emailMapper) {
+//        this.mailSender = mailSender;
+//        this.emailMapper = emailMapper;
+//    }
 
     @Override
     public Map<String, Object> sendEmail(NoticeVo noticeVo) {

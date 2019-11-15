@@ -2,13 +2,13 @@ package com.fina.lrps.domain;
 
 import java.io.Serializable;
 
-public class DepartmentUser implements Serializable {
+public class UserDepartment implements Serializable {
     private String studentId;
     private String departmentId;
     private String ifDelete;
     private String ifMain;
 
-    public DepartmentUser(){
+    public UserDepartment(){
         this.ifDelete = "否";
         this.ifMain = "否";
     }

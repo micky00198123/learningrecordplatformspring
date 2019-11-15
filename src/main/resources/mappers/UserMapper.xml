@@ -4,11 +4,8 @@
     <resultMap id="BaseResultMap" type="com.fina.lrps.domain.User" autoMapping="true">
         <id column="student_id" property="studentId"></id>
     </resultMap>
-    <resultMap id="UserListResultMap" type="com.fina.lrps.domain.DepartmentUser" autoMapping="true">
-        <association property="user" resultMap="BaseResultMap" autoMapping="true">
-            <id column="student_id" property="studentId"></id>
-        </association>
-    </resultMap>
+    <resultMap id="DepartmentsResultMap" type="com.fina.lrps.domain.Department" autoMapping="true"/>
+    <resultMap id="TechnologyResultMap" type="com.fina.lrps.domain.Technology" autoMapping="true"/>
     <select id="getLogin" resultMap="BaseResultMap" parameterType="com.fina.lrps.domain.User">
         select *
         from user
@@ -16,66 +13,18 @@
         and user.password=#{password}
 --         and user.if_delete='否'  待商议
     </select>
-    <select id="queryAllByDepartmentId" resultMap="UserListResultMap" parameterType="java.lang.String">
-        select *
-        from user_department ud
-        left join user u
-        on u.student_id=ud.student_id
-        where ud.department_id=#{departmentId}
+    <select id="queryDepartments" parameterType="java.lang.String" resultMap="DepartmentsResultMap">
+        select
+            d.*
+        from department d
+                 left join user_department ud on ud.department_id=d.department_id
+                 left join user u on u.student_id=ud.student_id
+        where u.student_id=#{studentId}
     </select>
-    <update id="deleteUser" parameterType="java.lang.String">
-        update user set if_delete='是' where user.student_id = #{studentId};
-        update user_department set if_delete='是' where user_department.student_id = #{studentId};
-        update user_technology set if_delete='是' where user_technology.student_id = #{studentId}
-    </update>
-    <update id="updateUserMain" parameterType="java.lang.String">
-        update user_department as ud
-        set if_main='是'
-        where ud.student_id = #{studentId}
-    </update>
-    <update id="updateUserNotMain" parameterType="java.lang.String">
-        update user_department as ud
-        set if_main='否'
-        where ud.student_id = #{studentId}
-    </update>
-    <insert id="insertUser" parameterType="com.fina.lrps.domain.DepartmentUser">
-        insert into user_department (
-            student_id,
-            department_id,
-            if_delete,
-            if_main
-        )values (
-            #{user.studentId},
-            #{departmentId},
-            #{ifDelete},
-            #{ifMain}
-        );
-        insert into user (
-            student_id,
-            password,
-            name,
-            sex,
-            grade,
-            single,
-            email,
-            state,
-            registration_date,
-            portrait,
-            punch_clock,
-            position
-        ) values (
-            #{user.studentId},
-            #{user.password},
-            #{user.name},
-            #{user.sex},
-            #{user.grade},
-            #{user.single},
-            #{user.email},
-            #{user.state},
-            #{user.registrationDate},
-            #{user.portrait},
-            #{user.punchClock},
-            #{user.position}
-        )
-    </insert>
+    <select id="queryTechnology" parameterType="java.lang.String" resultMap="TechnologyResultMap">
+        select *
+        from technology
+        left join user_technology ut on technology.technology_id = ut.technology_id
+        where ut.student_id=#{studentId}
+    </select>
 </mapper>
