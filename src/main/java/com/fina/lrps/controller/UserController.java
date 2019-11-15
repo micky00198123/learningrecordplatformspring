@@ -40,8 +40,6 @@ public class UserController {
         HttpSession session = request.getSession();
         String studentId = (String) session.getAttribute("studentId");
         String password = (String)session.getAttribute("password");
-        System.out.println("StudentId:" + studentId);
-        System.out.println("Password:" + password);
         JSONObject jsonObject = new JSONObject();
         userService.personCentralAdd(jsonObject,studentId,password);
         return jsonObject;

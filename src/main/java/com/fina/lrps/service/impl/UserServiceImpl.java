@@ -24,12 +24,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void personCentralAdd(JSONObject jsonObject,String studentId,String password) {
-        System.out.println("Service:" + studentId + "-" + password);
-        jsonObject.put("UserMsg",userMapper.getLogin(studentId,password));
-        System.out.println(jsonObject.get("UserMsg"));
+        User login = userMapper.getLogin(studentId, password);
+        login.setPassword(null);
+        jsonObject.put("UserMsg",login);
         jsonObject.put("Technologies",userMapper.queryTechnology(studentId));
-        System.out.println(jsonObject.get("Technologies"));
         jsonObject.put("Departments",userMapper.queryDepartments(studentId));
-        System.out.println(jsonObject.get("Departments"));
     }
 }
