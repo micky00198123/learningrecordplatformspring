@@ -25,4 +25,5 @@ public interface UserMapper {
      */
     List<Department> queryDepartments(String studentId);
     List<Technology> queryTechnology(String studentId);
+    int deleteUserTechnology(String technologyId);
 }

@@ -27,4 +27,12 @@
         left join user_technology ut on technology.technology_id = ut.technology_id
         where ut.student_id=#{studentId}
     </select>
+    <update id="deleteUserTechnology" parameterType="java.lang.String">
+        update user_technology
+        set if_delete='是'
+        where technology_id=#{technologyId};
+        update technology
+        set if_delete='是'
+        where technology_id=#{technologyId};
+    </update>
 </mapper>

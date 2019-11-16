@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fina.lrps.dao.AdminMapper">
+    <resultMap id="BaseUserResultMap" type="com.fina.lrps.domain.User" autoMapping="true"/>
+    <resultMap id="DepartmentMembersResultMap" type="com.fina.lrps.domain.DepartmentMembers" autoMapping="false">
+        <result column="dId" property="departmentId"/>
+        <result column="dName" property="departmentName"/>
+        <collection property="members" javaType="List" ofType="com.fina.lrps.domain.User" resultMap="BaseUserResultMap"/>
+    </resultMap>
+    <resultMap id="DeResultMap" type="com.fina.lrps.domain.Department" autoMapping="true"/>
+    <resultMap id="SearchMemberResultMap" type="com.fina.lrps.domain.SearchMember">
+        <association property="member" resultMap="BaseUserResultMap" autoMapping="true">
+            <id property="studentId" column="student_id"/>
+        </association>
+        <collection property="departments" ofType="com.fina.lrps.domain.Department" resultMap="DeResultMap"/>
+    </resultMap>
+    <update id="updateUserPosition" parameterType="java.lang.String">
+        update user
+        set position=#{position}
+        where student_id=#{studentId}
+    </update>
+    <update id="updateUserState" parameterType="java.lang.String">
+        update user
+        set state=#{state}
+        where student_id=#{studentId}
+    </update>
+    <update id="deleteUser" parameterType="java.lang.String">
+        update user
+        set if_delete='是'
+        where student_id=#{studentId};
+        update user_department
+        set if_delete='是'
+        where student_id=#{studentId}
+    </update>
+    <select id="queryAllMember" parameterType="java.lang.String" resultMap="BaseUserResultMap">
+        select *
+        from user
+        where name=#{name}
+    </select>
+    <select id="queryAllMembers" parameterType="java.lang.String" resultMap="DepartmentMembersResultMap">
+        select u.*,
+        ud.department_id as dId,
+        d.name as dName
+        from user as u
+        left join user_department ud on u.student_id = ud.student_id
+        left join department d on ud.department_id = d.department_id
+        where d.department_id = #{departmentId}
+    </select>
+    <select id="queryAllDepartment" resultMap="DeResultMap">
+        select *
+        from department
+    </select>
+    <select id="queryAllInternshipMembers" resultMap="BaseUserResultMap">
+        select *
+        from user
+        where state='实习'
+    </select>
+    <select id="queryAllIncumbencyMembers" resultMap="BaseUserResultMap">
+        select *
+        from user
+        where state='学习'
+    </select>
+    <select id="queryAllGraduatedMembers" resultMap="BaseUserResultMap">
+        select *
+        from user
+        where state='结业'
+    </select>
+</mapper>
