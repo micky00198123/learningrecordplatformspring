@@ -17,7 +17,8 @@ public interface UserMapper {
      * @return
      * 返回学生 对象 若密码或学号错误 返回User为null
      */
-    public User getLogin(String studentId, String password);
+    User getLogin(String studentId, String password);
+    User queryPersonalData(String studentId);
     /**
      * 传入部门Id 返回该部门所有学生的List
      * @param departmentId

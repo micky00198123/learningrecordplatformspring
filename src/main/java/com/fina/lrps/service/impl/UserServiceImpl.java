@@ -11,23 +11,29 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 @Component("UserService")
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Override
     @Transactional
-    public User login(String studentId, String password) {
-        User user = null;
-        user = userMapper.getLogin(studentId,password);
-        return user;
+    public JSONObject login(String studentId, String password) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("isLogin",false);
+        User user = userMapper.getLogin(studentId,password);
+        if(user != null)
+            jsonObject.put("isLogin",true);
+        return jsonObject;
     }
 
     @Override
-    public void personCentralAdd(JSONObject jsonObject,String studentId,String password) {
-        User login = userMapper.getLogin(studentId, password);
+    public JSONObject personCentral(String studentId) {
+        JSONObject jsonObject = new JSONObject();
+        User login = userMapper.queryPersonalData(studentId);
         login.setPassword(null);
         jsonObject.put("UserMsg",login);
         jsonObject.put("Technologies",userMapper.queryTechnology(studentId));
         jsonObject.put("Departments",userMapper.queryDepartments(studentId));
+        return jsonObject;
     }
 }

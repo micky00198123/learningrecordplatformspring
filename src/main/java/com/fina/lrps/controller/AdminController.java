@@ -1,11 +1,9 @@
 package com.fina.lrps.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fina.lrps.service.AdminService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,39 +15,39 @@ public class AdminController {
 
     @RequestMapping("/changeAuthority")
     @ResponseBody
-    public JSONObject changeAuthority(@Param("studentId") String studentId,@Param("position") String position){
-        return adminService.changeAuthority(studentId,position);
+    public String changeAuthority(@Param("studentId") String studentId,@Param("position") String position){
+        return adminService.changeAuthority(studentId,position).toJSONString();
     }
 
     @RequestMapping("/changeState")
     @ResponseBody
-    public JSONObject changeState(@Param("studentId") String studentId,@Param("state") String state){
-        return adminService.changeState(studentId,state);
+    public String changeState(@Param("studentId") String studentId,@Param("state") String state){
+        return adminService.changeState(studentId,state).toJSONString();
     }
 
     @RequestMapping("/countMembers")
     @ResponseBody
-    public JSONObject countMembers(){
-        return adminService.countMembers();
+    public String countMembers(){
+        return adminService.countMembers().toJSONString();
     }
 
     @RequestMapping("/deleteUser")
     @ResponseBody
-    public JSONObject deleteUser(@Param("studentId")String studentId){
-        return adminService.deleteUser(studentId);
+    public String deleteUser(@Param("studentId")String studentId){
+        return adminService.deleteUser(studentId).toJSONString();
     }
 
     @RequestMapping("/getPersonalData")
     @ResponseBody
-    public JSONObject getPersonalData(@Param("name")String name,@Param("state")String state,@Param("departmentName")String departmentName){
-        return adminService.getPersonalData(name,state,departmentName);
+    public String getPersonalData(@Param("name")String name,@Param("state")String state,@Param("departmentName")String departmentName){
+        return adminService.getPersonalData(name,state,departmentName).toJSONString();
     }
 
 
 
     @RequestMapping("/login")
     @ResponseBody
-    public JSONObject login(@Param("studentId")String studentId,@Param("password") String password){
-        return adminService.login(studentId,password);
+    public String login(@Param("studentId")String studentId,@Param("password") String password){
+        return adminService.login(studentId,password).toJSONString();
     }
 }

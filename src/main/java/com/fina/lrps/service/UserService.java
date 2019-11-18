@@ -10,6 +10,6 @@ public interface UserService {
      * @param password
      * @return
      */
-    public User login(String studentId,String password);
-    public void personCentralAdd(JSONObject jsonObject,String studentId,String password);
+    JSONObject login(String studentId, String password);
+    JSONObject personCentral(String studentId);
 }

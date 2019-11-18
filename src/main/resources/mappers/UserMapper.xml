@@ -6,12 +6,17 @@
     </resultMap>
     <resultMap id="DepartmentsResultMap" type="com.fina.lrps.domain.Department" autoMapping="true"/>
     <resultMap id="TechnologyResultMap" type="com.fina.lrps.domain.Technology" autoMapping="true"/>
-    <select id="getLogin" resultMap="BaseResultMap" parameterType="com.fina.lrps.domain.User">
+    <select id="getLogin" resultMap="BaseResultMap" parameterType="java.lang.String">
         select *
         from user
         where user.student_id=#{studentId}
         and user.password=#{password}
 --         and user.if_delete='否'  待商议
+    </select>
+    <select id="queryPersonalData" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select *
+        from user
+        where student_id=#{studentId}
     </select>
     <select id="queryDepartments" parameterType="java.lang.String" resultMap="DepartmentsResultMap">
         select
