@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.fina.lrps.dao.UserMapper;
 import com.fina.lrps.domain.User;
 import com.fina.lrps.service.UserService;
+import com.fina.lrps.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 @Component("UserService")
 @Transactional
@@ -17,12 +19,14 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Override
     @Transactional
-    public JSONObject login(String studentId, String password) {
+    public JSONObject login(String studentId, String password, HttpServletResponse response) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("isLogin",false);
         User user = userMapper.getLogin(studentId,password);
-        if(user != null)
+        if(user != null){
             jsonObject.put("isLogin",true);
+            response.setHeader("accessHeader", JwtUtil.getToken(studentId));
+        }
         return jsonObject;
     }
 
