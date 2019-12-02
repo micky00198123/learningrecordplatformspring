@@ -25,7 +25,7 @@ public class AdminServiceImpl implements AdminService {
     public JSONObject changeAuthority(String studentId, String position) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",false);
-        if(position.equals("成员") || position.equals("部长") || position.equals("总裁")){
+        if((position.equals("成员") || position.equals("部长") || position.equals("总裁")) && userMapper.queryPersonalData(studentId) != null){
             adminMapper.updateUserPosition(studentId, position);
             jsonObject.put("status",true);
         }
@@ -36,7 +36,7 @@ public class AdminServiceImpl implements AdminService {
     public JSONObject changeState(String studentId, String state) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",false);
-        if(state.equals("实习") || state.equals("学习") || state.equals("结业") || state.equals("离开")){
+        if((state.equals("实习") || state.equals("学习") || state.equals("结业") || state.equals("离开")) && userMapper.queryPersonalData(studentId) != null ){
             adminMapper.updateUserState(studentId, state);
             jsonObject.put("status",true);
         }

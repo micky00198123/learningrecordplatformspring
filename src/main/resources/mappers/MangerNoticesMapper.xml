@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fina.lrps.dao.ManagerNotice">
+    <resultMap id="ManagerNotice" type="com.fina.lrps.domain.NoticeEntity">
+        <result column="sendname" property="sendname"/>
+        <result column="label" property="label"/>
+        <result column="position" property="position"/>
+        <result column="content" property="content"/>
+        <result column="sendtime" property="sendtime"/>
+        <collection property="getNoticeName" ofType="java.lang.String">
+            <result column="getName"/>
+        </collection>
+    </resultMap>
+    <select id="getNotices" parameterType="String" resultMap="ManagerNotice">
+        select u1.name as sendname,
+               n.label as label,
+               u1.position as position,
+               n.content as content,
+               n.sending_time as sendtime,
+               u2.name as getName
+        from notice n
+        left join user u1 on n.student_id = u1.student_id
+        left join notice_user nu on n.notice_id = nu.notice_id
+        left join user u2 on nu.student_id = u2.student_id
+        where n.student_id = #{studentId} and n.sending_time > #{timeLimit}
+        order by sendname,sendtime,content;
+    </select>
+    <select id="getDepartmentNotices" parameterType="String" resultMap="ManagerNotice">
+        select u1.name as sendname,
+               n.label as label,
+               u1.position as position,
+               n.content as content,
+               n.sending_time as sendtime,
+               u2.name as getName
+        from notice n
+         left join user u1 on n.student_id = u1.student_id
+         left join user_department ud on u1.student_id = ud.student_id
+         left join notice_user nu on n.notice_id = nu.notice_id
+         left join user u2 on nu.student_id = u2.student_id
+        where ud.department_id=#{deaprtmentId}
+    </select>
+</mapper>

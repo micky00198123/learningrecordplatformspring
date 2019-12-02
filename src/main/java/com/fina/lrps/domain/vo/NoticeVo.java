@@ -8,6 +8,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+/**
+* @author MLPFIM
+* @date 2019/11/21
+*/
 @Setter
 @Getter
 @ToString

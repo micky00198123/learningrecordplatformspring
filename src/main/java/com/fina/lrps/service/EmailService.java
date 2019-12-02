@@ -4,6 +4,10 @@ import com.fina.lrps.domain.vo.NoticeVo;
 
 import java.util.Map;
 
+/**
+* @author MLPFIM
+* @date 2019/11/21
+*/
 public interface EmailService {
 
     /**

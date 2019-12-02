@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 
+/**
+* @author MLPFIM
+* @date 2019/11/21
+*/
 @Controller
 public class EmailController {
 

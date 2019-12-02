@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fina.lrps.dao.NoticeDao">
+
+    <resultMap id="DepartmentMemberMap" type="com.fina.lrps.domain.DepartmentMember">
+        <id property="studentId" column="student_id"></id>
+        <result property="name" column="name"></result>
+    </resultMap>
+
+    <select id="getDepartmentMember" parameterType="String" resultMap="DepartmentMemberMap">
+        SELECT 'student_id', `name` FROM 'user'
+        where 'state' ='学习'
+        AND 'student_id' IN (SELECT 'student_id' FROM 'user_department' where 'department_id' = #{id})
+    </select>
+
+    <resultMap id="NoticeList" type="com.fina.lrps.domain.NoticeForm">
+        <id property="noticeId" column="notice_id"></id>
+        <result property="content" column="content"></result>
+        <result property="label" column="label"></result>
+        <result property="read" column="if_read"></result>
+    </resultMap>
+
+    <select id="getNoticeList" parameterType="String" resultMap="NoticeList">
+        select  n.notice_id,n.content,n.label,nu.if_read from notice n
+        join notice_user nu
+        on n.notice_id = nu.notice_id
+        where nu.student_id = #{id}
+    </select>
+
+</mapper>

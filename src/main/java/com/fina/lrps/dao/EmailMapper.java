@@ -1,11 +1,15 @@
 package com.fina.lrps.dao;
 
-import com.fina.lrps.domain.po.NoticePo;
 import com.fina.lrps.domain.NoticeUsers;
+import com.fina.lrps.domain.po.NoticePo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
+/**
+* @author MLPFIM
+* @date 2019/11/21
+*/
 @Mapper
 @Repository
 public interface EmailMapper {
@@ -57,5 +61,6 @@ public interface EmailMapper {
      * @return int
      */
     int findMembers(String[] studentId);
+
 
 }

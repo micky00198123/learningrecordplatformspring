@@ -23,7 +23,8 @@
     </select>
 
     <select id="countLearningMember" resultType="int">
-        SELECT COUNT(1) FROM `user` WHERE `state` = '学习'
+        SELECT COUNT(1) FROM `user`
+        WHERE `state` = '学习' AND `if_delete` = '否'
     </select>
 
     <insert id="insertNotice" parameterType="com.fina.lrps.domain.po.NoticePo">
@@ -56,15 +57,18 @@
     </insert>
 
     <select id="findMember" resultType="int">
-        SELECT COUNT(1) FROM `user` WHERE `student_id` = #{studentId}
+        SELECT COUNT(1) FROM `user`
+        WHERE `student_id` = #{studentId} AND `if_delete` = '否'
     </select>
 
     <select id="findMembers" resultType="int">
-        SELECT COUNT(1) FROM `user` WHERE `state` = '学习' AND `student_id` IN
+        SELECT COUNT(1) FROM `user`
+        WHERE `state` = '学习' AND `if_delete` = '否' AND `student_id` IN
         <foreach collection="array" item="addressesId"
                  open="(" close=")" separator=",">
             #{addressesId}
         </foreach>
     </select>
+
 
 </mapper>

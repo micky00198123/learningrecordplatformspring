@@ -25,11 +25,7 @@ public class UserController {
     }
     @RequestMapping("/PersonCentral")
     @ResponseBody
-    public String personCentral(HttpServletRequest request){
-        String accessHeader = request.getHeader("accessheader");
-        JSONObject payLoad = JwtUtil.getPayLoad(accessHeader);
-        String studentId = payLoad.getString("studentId");
-        System.out.println(studentId);
+    public String personCentral(@Param("studentId")String studentId){
         return userService.personCentral(studentId).toJSONString();
     }
 }
