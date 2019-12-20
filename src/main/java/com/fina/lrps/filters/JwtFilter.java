@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -21,8 +22,10 @@ public class JwtFilter implements Filter {
         String accessHeader = request.getHeader("accessHeader");
         if (JwtUtil.verify(accessHeader) || request.getServletPath().endsWith("/login")){
             filterChain.doFilter(servletRequest,servletResponse);
-        }else
-            request.getRequestDispatcher("www.baidu.com");//暂时
+        }else{
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
+            response.sendError(404,"您需要登录！");
+        }
     }
 
     @Override
